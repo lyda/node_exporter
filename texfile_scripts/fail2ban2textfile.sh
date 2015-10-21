@@ -2,7 +2,7 @@
 
 #
 # Run as root from cron.  Add a file with these contents to /etc/cron.d:
-#    */5 * * * * root /path/to/fail2ban2texfile.sh > /var/lib/node_exporter/textfile_collector/fail2ban.prom.tmp && mv /var/lib/node_exporter/textfile_collector/fail2ban.prom.tmp /var/lib/node_exporter/textfile_collector/fail2ban.prom
+#    */5 * * * * root /path/to/fail2ban2textfile.sh > /var/lib/node_exporter/textfile_collector/fail2ban.prom.tmp && mv /var/lib/node_exporter/textfile_collector/fail2ban.prom.tmp /var/lib/node_exporter/textfile_collector/fail2ban.prom
 
 jails=0
 for jail in $(fail2ban-client status | grep 'Jail list:' \
@@ -45,7 +45,7 @@ done | sort | awk '
     } }
   { print $0 }'
 cat << EOF
-# HELP fail2ban_banned_total Total number banned.
-# TYPE fail2ban_banned_total counter
+# HELP fail2ban_jails Total number of jails.
+# TYPE fail2ban_jails gauge
 fail2ban_jails $jails
 EOF
