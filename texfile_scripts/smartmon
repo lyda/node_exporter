@@ -3,6 +3,10 @@
 # by Samuel B. <samuel_._behan_(at)_dob_._sk> (c) 2012
 # source at: http://devel.dob.sk/collectd-scripts/
 
+# TODO: This probably needs to be a little more complex.  The raw numbers can have more
+#       data in them than you'd think.
+#       http://arstechnica.com/civis/viewtopic.php?p=22062211
+
 # Run as root from cron.  Add a file with these contents to /etc/cron.d:
 #    */5 * * * * root /path/to/smartmon > /var/lib/node_exporter/textfile_collector/smartmon.prom.tmp && mv /var/lib/node_exporter/textfile_collector/smartmon.prom.tmp /var/lib/node_exporter/textfile_collector/smartmon.prom
 
