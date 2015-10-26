@@ -1,0 +1,30 @@
+#!/bin/bash
+# Script informed by the collectd monitoring script for smartmontools (using smartctl)
+# by Samuel B. <samuel_._behan_(at)_dob_._sk> (c) 2012
+# source at: http://devel.dob.sk/collectd-scripts/
+
+# TODO: This probably needs to be a little more complex.  The raw numbers can have more
+#       data in them than you'd think.
+#       http://arstechnica.com/civis/viewtopic.php?p=22062211
+
+# Run as root from cron.  Add a file with these contents to /etc/cron.d:
+#    */5 * * * * root /path/to/smartmon > /var/lib/node_exporter/textfile_collector/smartmon.prom.tmp && mv /var/lib/node_exporter/textfile_collector/smartmon.prom.tmp /var/lib/node_exporter/textfile_collector/smartmon.prom
+
+for disk in $(/usr/sbin/smartctl --scan | awk '{print $1}'); do
+  echo "smartmon_smartctl_run{disk=\"${disk}\"}" $(TZ=UTC date '+%s')
+  /usr/sbin/smartctl -A "$disk" \
+    | awk '$3 ~ /^0x/ && $2 ~ /^[a-zA-Z0-9_-]+$/ {
+             gsub(/-/, "_");
+             print "smartmon_" $2 "{disk=\"'"$disk"'\"} " $10
+           }' 2>/dev/null \
+    | tr A-Z a-z \
+    | egrep 'smartmon_(command_timeout|current_pending_sector|end_to_end_error|hardware_ecc_recovered|offline_uncorrectable|raw_read_error_rate|reallocated_sector_ct|reported_uncorrect|spin_up_time|airflow_temperature_cel|temperature_celsius|media_wearout_indicator)'
+done \
+  | sort \
+  | awk '-F{' \
+        'BEGIN { v = "" }
+         v != $1 {
+           print "# TYPE " $1 " gauge";
+           v = $1
+         }
+         {print $0}'
