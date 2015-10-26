@@ -1,0 +1,28 @@
+#!/usr/bin/python
+
+import pythonwhois
+import sys
+
+whois_errors = {}
+whois_expires_in_days = {}
+
+for host in sys.argv[1:]:
+  try:
+    r = pythonwhois.get_whois(host)
+    if 'expiration_date' in r and len(r['expiration_date']) > 0:
+      d = r['expiration_date'][0]
+      whois_expires_in_days[host] = (d - d.now()).days
+    else:
+      whois_errors[host] = 1
+  except:
+    whois_errors[host] = 1
+
+if len(whois_errors) > 0:
+  print '# TYPE whois_errors gauge'
+  for host, error in whois_errors.iteritems():
+    print 'whois_errors{host="%s"} %d' % (host, error)
+
+if len(whois_expires_in_days) > 0:
+  print '# TYPE whois_expires_in_days gauge'
+  for host, days in whois_expires_in_days.iteritems():
+    print 'whois_expires_in_days{host="%s"} %d' % (host, days)
