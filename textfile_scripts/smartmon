@@ -8,7 +8,7 @@
 #       http://arstechnica.com/civis/viewtopic.php?p=22062211
 
 # Run as root from cron.  Add a file with these contents to /etc/cron.d:
-#    */5 * * * * root /path/to/smartmon > /var/lib/node_exporter/textfile_collector/smartmon.prom.tmp && mv /var/lib/node_exporter/textfile_collector/smartmon.prom.tmp /var/lib/node_exporter/textfile_collector/smartmon.prom
+#    */5 * * * * root /path/to/runner smartmon
 
 for disk in $(/usr/sbin/smartctl --scan | awk '{print $1}'); do
   echo "smartmon_smartctl_run{disk=\"${disk}\"}" $(TZ=UTC date '+%s')

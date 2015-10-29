@@ -1,5 +1,9 @@
 #!/usr/bin/python
 
+# Scans whois info to try and determine the expiration of passed domain names.
+# Run as the node-exporter user like so:
+#    0 12 * * * node-exporter /path/to/runner whois domai.ns t.o che.ck
+
 import pythonwhois
 import sys
 

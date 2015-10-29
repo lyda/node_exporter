@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Run as node-exporter user from cron (assuming you have open access to nginx logs):
+#    */5 * * * * node-exporter /path/to/runner nginxmon
+
 import glob
 import re
 

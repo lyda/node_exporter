@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run as root from cron.  Add a file with these contents to /etc/cron.d:
-#    */5 * * * * root /path/to/fail2ban2 > /var/lib/node_exporter/textfile_collector/fail2ban.prom.tmp && mv /var/lib/node_exporter/textfile_collector/fail2ban.prom.tmp /var/lib/node_exporter/textfile_collector/fail2ban.prom
+#    */5 * * * * root /path/to/runner fail2ban
 
 jails=0
 for jail in $(fail2ban-client status | grep 'Jail list:' \

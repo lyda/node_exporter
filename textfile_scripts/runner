@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# Runs a textfile collector.
+
 textfile_dir=$(dirname $0)
 metric="$1"
+shift
 script="$textfile_dir/$metric"
 prom_file="/var/lib/node_exporter/textfile_collector/$metric".prom
 
@@ -9,4 +12,4 @@ if [[ ! -x "$script" || -d "$script" ]]; then
   echo "ERROR: Can't find script for '$metric'. Aborting."
   exit 1
 fi
-"$script" > "$prom_file".tmp && mv "$prom_file".tmp "$prom_file"
+"$script" "$@" > "$prom_file".tmp && mv "$prom_file".tmp "$prom_file"
